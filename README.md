@@ -42,3 +42,5 @@ The `test-backend` job carries out the essential steps for building and testing 
 ## For what purpose do we need to push docker images?
 
 Pushing Docker images allows you to upload your locally built images to a remote repository, such as Docker Hub or a private registry, making them accessible for deployment across different environments or by other team members. This practice ensures version control, easy distribution, and scalability of applications within containerized environments.
+
+## Document your quality gate configuration.
