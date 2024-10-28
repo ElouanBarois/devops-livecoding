@@ -46,3 +46,5 @@ Pushing Docker images allows you to upload your locally built images to a remote
 ## Document your quality gate configuration.
 
 ![img.png](img.png)
+
+This quality gate configuration shows no new issues, accepted issues, or security hotspots in the analyzed code, indicating no conditions have been set to flag concerns in these areas. Additionally, it reports insufficient lines of code to compute coverage, and there are no code duplications detected.
