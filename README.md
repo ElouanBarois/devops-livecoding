@@ -38,3 +38,7 @@ The `test-backend` job carries out the essential steps for building and testing 
     - **Command**: `mvn clean install`
     - **Purpose**: Runs Maven to build the project and execute tests. The `mvn clean install` command first cleans any previous builds and then builds the project and runs tests.
     - **Working Directory**: `simple-api` - Ensures Maven commands are run in the specified project directory (`simple-api`).
+
+## For what purpose do we need to push docker images?
+
+Pushing Docker images allows you to upload your locally built images to a remote repository, such as Docker Hub or a private registry, making them accessible for deployment across different environments or by other team members. This practice ensures version control, easy distribution, and scalability of applications within containerized environments.
