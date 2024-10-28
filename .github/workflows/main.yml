@@ -54,6 +54,9 @@ jobs:
           tags:  ${{secrets.DOCKER_HUB_USERNAME}}/tp-devops-database:latest
           push: ${{ github.ref == 'refs/heads/main' }}
 
+      - name: Login to DockerHub
+        run: docker login -u ${{ secrets.DOCKER_HUB_USERNAME }} -p ${{ secrets.DOCKER_HUB_TOKEN }}
+
       - name: Build image and push httpd
         uses: docker/build-push-action@v3
         with:
@@ -61,7 +64,5 @@ jobs:
           tags:  ${{secrets.DOCKER_HUB_USERNAME}}/tp-devops-http-server:latest
           push: ${{ github.ref == 'refs/heads/main' }}
 
-      - name: Login to DockerHub
-        run: docker login -u ${{ secrets.DOCKER_HUB_USERNAME }} -p ${{ secrets.DOCKER_HUB_TOKEN }}
 
 
