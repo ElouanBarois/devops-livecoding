@@ -1,0 +1,17 @@
+- hosts: all
+  gather_facts: true
+  become: true
+
+  vars:
+    db_user: "your_db_user"
+    db_password: "your_db_password"
+    app_env: "production"
+
+  roles:
+    - install_docker
+    - create_network
+    - volumes
+    - launch_database
+    - launch_app
+    - launch_proxy
+

@@ -1,0 +1,18 @@
+# roles/launch_app/tasks/main.yml
+
+- name: Run Application container
+  docker_container:
+    name: my-api
+    image: l1elou/tp-devops-simple-api
+    state: started
+    env:
+      DATABASE_HOST: my-db  # Name of the database container
+      DATABASE_PORT: "5432"  # Default PostgreSQL port
+      POSTGRES_DB: db
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: pwd
+    networks:
+      - name : my-network
+  vars:
+    ansible_python_interpreter: /opt/docker_venv/bin/python3
+

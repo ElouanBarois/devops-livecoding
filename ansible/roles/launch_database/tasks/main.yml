@@ -1,0 +1,15 @@
+# roles/launch_database/tasks/main.yml
+
+- name: Run Database container
+  docker_container:
+    name: my-db
+    image: l1elou/tp-devops-database
+    env:
+      POSTGRES_DB: db
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: pwd
+    networks:
+      - name: my-network
+    state: started
+  vars:
+    ansible_python_interpreter: /opt/docker_venv/bin/python3

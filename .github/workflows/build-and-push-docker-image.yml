@@ -5,7 +5,7 @@ on:
   workflow_run:
     workflows: ["Test Backend"]  # Run after "Test Backend" workflow
     branch:
-      -main
+      - main
     types:
       - completed
 
