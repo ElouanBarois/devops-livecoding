@@ -158,3 +158,138 @@ ansible all -i inventories/setup.yml -m setup -a "filter=ansible_distribution*"
     state: started
 ```
 **Description**: Ensures that the Docker service is started and running.
+
+## Document your docker_container tasks configuration
+
+1. Install docker and its dependencies
+
+```yml
+---
+# Install prerequisites for Docker
+- name: Install required packages
+  apt:
+    name:
+      - apt-transport-https
+      - ca-certificates
+      - curl
+      - gnupg
+      - lsb-release
+      - python3-venv
+    state: latest
+    update_cache: yes
+
+# Add Docker’s official GPG key
+- name: Add Docker GPG key
+  apt_key:
+    url: https://download.docker.com/linux/debian/gpg
+    state: present
+
+# Set up the Docker stable repository
+- name: Add Docker APT repository
+  apt_repository:
+    repo: "deb [arch=amd64] https://download.docker.com/linux/debian {{ ansible_facts['distribution_release'] }} stable"
+    state: present
+    update_cache: yes
+
+# Install Docker
+- name: Install Docker
+  apt:
+    name: docker-ce
+    state: present
+
+# Install Python3 and pip3
+- name: Install Python3 and pip3
+  apt:
+    name:
+      - python3
+      - python3-pip
+    state: present
+
+# Create a virtual environment for Python packages
+- name: Create a virtual environment for Docker SDK
+  command: python3 -m venv /opt/docker_venv
+  args:
+    creates: /opt/docker_venv  # Only runs if this directory doesn’t exist
+
+# Install Docker SDK for Python in the virtual environment
+- name: Install Docker SDK for Python in virtual environment
+  command: /opt/docker_venv/bin/pip install docker
+
+# Ensure Docker is running
+- name: Ensure Docker is running
+  service:
+    name: docker
+    state: started
+  tags: docker
+```
+
+
+2. Create docker network
+
+```yml
+- name: Create Docker network
+  community.docker.docker_network:
+    name: my-network
+    state: present
+```
+
+
+3. Launch database
+
+```yml
+- name: Run Database
+  community.docker.docker_container:
+    name: my-db
+    image: azekyo/tp-devops-database
+    env:
+      POSTGRES_DB: db
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: pwd
+    networks:
+      - name: my-network
+    volumes:
+      - db-volume:/var/lib/postgresql/data
+    state: started
+```
+
+
+4. Launch application
+
+```yml
+- name: Run Backend Application
+  community.docker.docker_container:
+    name: my-api
+    image: azekyo/tp-devops-api	
+    env:
+      DATABASE_HOST: my-db  # Name of the database container
+      DATABASE_PORT: "5432"  # Default PostgreSQL port
+      POSTGRES_DB: db
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: pwd
+    networks:
+      - name: my-network
+    state: started
+```
+
+
+5. Launch proxy
+
+```yml
+- name: Run Proxy
+  community.docker.docker_container:
+    name: httpd
+    image: azekyo/tp-devops-httpd	
+    ports:
+      - "80:80"
+    networks:
+      - name: my-network
+    state: started
+```
+
+
+6. Run the playbook
+
+
+```bash
+ansible-playbook -i inventories/setup.yml playbook.yml
+```
